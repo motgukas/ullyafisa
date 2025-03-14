@@ -67,7 +67,6 @@ function guessAnswer(answer, elem) {
     if (answer === correctAnswer) {
         score++;
         scoreSpan.textContent = score;
-        resultEl.textContent = score >= 13 ? "You win! Keep playing." : "Правильно !!";
         if (elem) {
             const originalBG = elem.style.backgroundColor;
             elem.style.backgroundColor = "green";
@@ -82,7 +81,6 @@ function guessAnswer(answer, elem) {
             return;
         }
     } else {
-        resultEl.textContent = "Не правильно :((";
         if (elem) {
             const originalBG = elem.style.backgroundColor;
             elem.style.backgroundColor = "red";
@@ -129,6 +127,12 @@ function resetGame() {
     document.getElementById('attempts').textContent = attempts;
     document.getElementById('result').textContent = "";
     document.getElementById('ending-container').style.display = 'none';
+    
+    // Remove any inline background color from guess boxes and buttons
+    document.querySelectorAll('.guess-box, #play-btn, #play-again-btn').forEach(btn => {
+         btn.style.backgroundColor = "";
+    });
+    
     document.getElementById('game-container').style.display = 'block';
     correctAnswer = Math.random() < 0.5 ? 'Ulya' : 'Fisa';
     if (imagesData) {
