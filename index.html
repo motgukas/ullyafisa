@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Угадай кто?</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Load p5.js from CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/p5.min.js"></script>
+
+  <!-- Link to external CSS -->
+  <link rel="stylesheet" href="styles.css" />
+
+  <!-- Import Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+    }
+    /* Center the welcome container and style the play button */
+    #welcome-container {
+      text-align: center;
+      margin-top: 50px;
+    }
+    #play-btn, #play-again-btn {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: transform 0.2s, background-color 0.2s;
+    }
+    #play-btn:hover, #play-again-btn:hover {
+      background-color: #ddd;
+      transform: scale(1.05);
+    }
+    /* Style for the ending container */
+    #ending-container {
+      text-align: center;
+      margin-top: 50px;
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="welcome-container">
+    <h1>Добро пожаловать дорогой friend !!!</h1>
+    <p>Хорошо знаете наших любимых блезняшек?</p>
+    <p>В этой игре вам нужно угадать кто на картинке, Уля или Фиса</p>
+    <p>У вас есть 15 попыток, чтобы
+      набрать как можно больше очков.</p>
+    <p>Начнем?</p>
+    <button id="play-btn" onclick="startGame()">Play</button>
+  </div>
+  
+  <div id="game-container" style="display:none;">
+    <h1> ФИСА ИЛИ УЛЯ???</h1>
+    <!-- Score display using spans so the values update dynamically -->
+    <div id="score-board">
+      <p>Score: <span id="score">0</span> | Attempts: <span id="attempts">0</span></p>
+    </div>
+
+    <!-- The image displayed to guess -->
+    <img src="" alt="Ulya ИЛИ Fisa" id="person-image" />
+
+    <!-- Interactive guess boxes -->
+    <div id="guess-boxes">
+      <div class="guess-box" onclick="guessAnswer('Ulya', this)">Ulya</div>
+      <div class="guess-box" onclick="guessAnswer('Fisa', this)">Fisa</div>
+    </div>
+
+    <!-- Result / feedback text -->
+    <p id="result"></p>
+  </div>
+
+  <!-- Ending container for when 15 attempts are reached -->
+  <div id="ending-container">
+    <h1>Game Over</h1>
+    <p>У вас <span id="final-score"></span> очков за 15 попыток</p>
+    <button id="play-again-btn" onclick="resetGame()">Play Again</button>
+  </div>
+
+  <!-- Link to external JS -->
+  <script src="script.js"></script>
+</body>
+</html>
