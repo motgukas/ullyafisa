@@ -3,8 +3,8 @@ let correctAnswer = Math.random() < 0.5 ? 'Ulya' : 'Fisa';
 
 // Global variables to store images list, score, and last used indices
 let imagesData = null;
-let lastUlyaIndex = -1;
-let lastFisaIndex = -1;
+let usedUlyaIndices = [];
+let usedFisaIndices = [];
 let score = 0; // start with 0 points
 let attempts = 0; // start with 0 attempts
 
@@ -22,35 +22,40 @@ fetch('./images.json')
 function setPicture() {
     if (!imagesData) return; // Ensure imagesData is loaded
     const img = document.getElementById('person-image');
-    let folder, imagesArray, lastIndex;
+    let folder, imagesArray, usedIndices;
     
     if (correctAnswer === 'Ulya') {
         folder = "./ulya/";
         imagesArray = imagesData.ulya;
-        lastIndex = lastUlyaIndex;
+        usedIndices = usedUlyaIndices;
     } else {
         folder = "./fisa/";
         imagesArray = imagesData.fisa;
-        lastIndex = lastFisaIndex;
+        usedIndices = usedFisaIndices;
     }
     
     if (imagesArray.length === 0) return; // no images available
 
-    // Pick a random image index, avoid repeating the immediate last index
-    let randomIndex = Math.floor(Math.random() * imagesArray.length);
-    if (imagesArray.length > 1) {
-        while (randomIndex === lastIndex) {
-            randomIndex = Math.floor(Math.random() * imagesArray.length);
+    // Build list of indices that haven't been used yet.
+    let availableIndices = [];
+    for (let i = 0; i < imagesArray.length; i++) {
+        if (!usedIndices.includes(i)) {
+            availableIndices.push(i);
         }
     }
     
-    // Update the last used index for whichever folder we used
-    if (correctAnswer === 'Ulya') {
-        lastUlyaIndex = randomIndex;
-    } else {
-        lastFisaIndex = randomIndex;
+    // Reset if all images were already shown.
+    if (availableIndices.length === 0) {
+        usedIndices.length = 0; // clears the array
+        for (let i = 0; i < imagesArray.length; i++) {
+            availableIndices.push(i);
+        }
     }
-
+    
+    // Pick a random image from available ones and store its index.
+    let randomIndex = availableIndices[Math.floor(Math.random() * availableIndices.length)];
+    usedIndices.push(randomIndex);
+    
     // Set the image src
     img.src = folder + imagesArray[randomIndex];
 }
@@ -135,6 +140,8 @@ function resetGame() {
     
     document.getElementById('game-container').style.display = 'block';
     correctAnswer = Math.random() < 0.5 ? 'Ulya' : 'Fisa';
+    usedUlyaIndices = [];
+    usedFisaIndices = [];
     if (imagesData) {
         setPicture();
     }
