@@ -8,6 +8,10 @@ let usedFisaIndices = [];
 let score = 0; // start with 0 points
 let attempts = 0; // start with 0 attempts
 
+// New global variables for particle explosion
+let gameOver = false;
+let particles = [];
+
 // Load image filenames from images.json and set the initial picture
 fetch('./images.json')
   .then(response => response.json())
@@ -122,6 +126,15 @@ function endGame(){
     document.getElementById('game-container').style.display = 'none';
     document.getElementById('ending-container').style.display = 'block';
     document.getElementById('final-score').textContent = score;
+    
+    // Trigger particle explosion effect only if the user got 15 points
+    if (score === 15) {
+        gameOver = true;
+        // Generate 500 particles (5× more than before) from the center of the canvas
+        for (let i = 0; i < 500; i++) {
+            particles.push(new Particle(width / 2, height / 2));
+        }
+    }
 }
 
 function resetGame() {
@@ -145,6 +158,10 @@ function resetGame() {
     if (imagesData) {
         setPicture();
     }
+    
+    // Reset particle explosion effect
+    gameOver = false;
+    particles = [];
 }
 
 // p5.js background animation
@@ -155,6 +172,16 @@ function setup() {
 function draw() {
     let blueShade = map(sin(frameCount * 0.01), -1, 1, 200, 255);
     background(20, 40, blueShade);
+    
+    // When game is over, update and render particles
+    if (gameOver) {
+        for (let i = particles.length - 1; i >= 0; i--) {
+            let p = particles[i];
+            p.update();
+            p.display();
+            if (p.isDead()) { particles.splice(i, 1); }
+        }
+    }
 }
 
 function windowResized() {
@@ -164,4 +191,26 @@ function windowResized() {
 function startGame() {
   document.getElementById('welcome-container').style.display = 'none';
   document.getElementById('game-container').style.display = 'block';
+}
+
+// Particle class for explosion effect
+class Particle {
+    constructor(x, y) {
+        this.pos = createVector(x, y);
+        this.vel = p5.Vector.random2D();
+        this.vel.mult(random(2, 5));
+        this.lifetime = 255;
+    }
+    update() {
+        this.pos.add(this.vel);
+        this.lifetime -= 4;
+    }
+    display() {
+        noStroke();
+        fill(255, this.lifetime);
+        ellipse(this.pos.x, this.pos.y, 8);
+    }
+    isDead() {
+        return this.lifetime < 0;
+    }
 }
