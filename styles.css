@@ -2,7 +2,32 @@ body, html {
     margin: 0;
     padding: 0;
     height: 100%;
-    font-family: Arial, sans-serif;
+    font-family: 'Roboto', sans-serif;
+}
+
+
+  /* Center the welcome container and style the play button */
+#welcome-container {
+    text-align: center;
+    margin-top: 50px;
+}
+
+#play-btn, #play-again-btn {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: transform 0.2s, background-color 0.2s;
+}
+
+#play-btn:hover, #play-again-btn:hover {
+    background-color: #ddd;
+    transform: scale(1.05);
+}
+  /* Style for the ending container */
+#ending-container {
+    text-align: center;
+    margin-top: 50px;
+    display: none;
 }
 
 /* Ensure p5.js canvas is fixed in the background */
